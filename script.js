@@ -100,24 +100,14 @@
             }
         },
         forEach:function (arr, callback) {
-            if (this.isArrayLike(arr)) {
-                if (Array.prototype.forEach) {
-                    Array.prototype.forEach.call(arr, callback);
-                } else {
-                    var i = 0;
-                    for (i = 0; i < arr.length; ++i) {
-                        callback.call(arr[i], arr[i]);
-                    }
-                }
-            }
+            Array.prototype.forEach.call(arr, callback);
         },
         isArrayLike:function (obj) {
             if (typeof obj !== 'object') {
                 return false;
             }
             var types = ['Array', 'NodeList', 'HTMLCollection'];
-            var i = 0;
-            for (i = 0; i < types.length; ++i) {
+            for (var i = 0; i < types.length; ++i) {
                 if (Object.prototype.toString.call(obj).indexOf(types[i]) !== -1) {
                     return true;
                 }
@@ -159,6 +149,49 @@
 
 
     CONTROLLER = [
+        {
+            host: '.',
+            fn: function () {
+                var known = [];
+                onLoad(CONSTANTS.PLAYER_DOM, function (elem) {
+                    var attrs = ['data', 'src'];
+                    var players = CONSTANTS.PLAYERS;
+                    var reloaded = false;
+                    if(known.indexOf(elem)!==-1){
+                        return;
+                    }
+                    UTIL.forEach(attrs, function (attr) {
+                        UTIL.forEach(players, function (player) {
+                            var find = player.find;
+                            var replace = player.replace;
+                            var value = elem[attr];
+                            var movie = elem.querySelector('param[name="movie"]');
+
+                            if(movie&&movie.value){
+                                movie.value = movie.value.replace(find,replace);
+                                reloaded = true;
+                            }
+                            if (value && find.test(value)) {
+                                var nextSibling = elem.nextSibling;
+                                var parentNode = elem.parentNode;
+                                var clone = elem.cloneNode(true);
+                                clone[attr] = value.replace(find, replace);
+                                parentNode.removeChild(elem);
+                                parentNode.insertBefore(clone, nextSibling);
+                                //Baidu tieba shit.
+                                if(clone && getComputedStyle(clone).display==='none' && clone.style){
+                                    clone.style.display='block';
+                                }
+                                reloaded = true;
+                            }
+                        });
+                    });
+                    if(reloaded){
+                        known.push(elem);
+                    }
+                });
+            }
+        },
         {
             host:'youku.com',
             fn:function () {
@@ -223,6 +256,36 @@
     }
 
 
+    //load player
+    function onLoad(tagNameList, fn) {
+        var lowerTagNameList = [];
+        UTIL.forEach(tagNameList, function(a){
+            lowerTagNameList.push(a.toLowerCase());
+        });
+
+        /* animationstart not invoked in background tabs of chrome 21 */
+        var all = document.querySelectorAll(lowerTagNameList.join(','));
+        for(var i=0;i<all.length;++i){
+            fn(all[i]);
+        }
+        UTIL.addCss(CONSTANTS.NODEINSERTED_HACK);
+
+        /*Chrome*/
+        document.body.addEventListener('webkitAnimationEnd', onAnimationStartHandler, false);
+        /*/Chrome*/
+
+        //Handle function
+        function onAnimationStartHandler(e) {
+            if (e.animationName === 'nodeInserted') {
+                var target = e.target;
+                if (target.nodeType === 1 && lowerTagNameList.indexOf(target.nodeName.toLowerCase())!==-1) {
+                    fn(target);
+                }
+            }
+        }
+    }
+
+
     function tips() {
         var holder = document.body.querySelector(CONSTANTS.TIPS_HOLDER);
         if (holder) {
@@ -257,7 +320,7 @@
         if (opt && player) {
             UTIL.proxy(function (Global, imports) {
                 var player = Global.document.querySelector('object#movie_player');
-                player.setTHX(imports.opt);
+                player.setTHX&&player.setTHX(imports.opt);
             }, {
                 opt:opt
             });
