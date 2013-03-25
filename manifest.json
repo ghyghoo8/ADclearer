@@ -1,0 +1,17 @@
+{
+   "content_scripts": [ {
+      "exclude_globs": [ "http://www.kuaipan.cn/*" ],
+      "exclude_matches": [  ],
+      "include_globs": [  ],
+      "js": [ "script.js" ],
+      "matches": [ "http://*/*", "https://*/*" ],
+      "run_at": "document_idle"
+   } ],
+   "converted_from_user_script": true,
+   "description": "OpenGG.Clean.Player",
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9m8MNnQRovEQO8t49cscSV4eNxfOHWeBQ4odI4WojR4ySW8qyAnR+TpzTTgJjiXC4Y9MfXZ1dgztO7VRjSW/eAdTI4g35kyD86meR616l3UgEebG7uI56tPbIr+APojYykPucACmDrIaIi3UlAuWBe1U5KvQL/9hXA3r/BXEIswIDAQAB",
+   "manifest_version": 2,
+   "name": "OpenGG.Clean.Player",
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.31"
+}
