@@ -20,7 +20,10 @@
         host = location.host;
 
 
-    if (typeof unsafeWindow == 'undefined'){
+    var MOVIEPLAYER = 'object#movie_player';
+
+
+    if (typeof unsafeWindow == 'undefined') {
         unsafeWindow = window;
     }
 
@@ -70,7 +73,7 @@
             }
         ],
         TIPS_HOLDER:'#miniheader,#gTop',
-        TIPS:'<div class="tips_container">screening ad...</div>',
+        TIPS:'<div class="tips_container">screening ad...<a class="tips_close">X</a></div>',
         STYLE:'.playBox_thx #player.player,.playBox_thx #player.player object{min-height:' + Math.max(Global.innerHeight * 0.6, 580) + 'px !important}.tips_container{position:absolute;top:3em;padding:1em 2em;right:50px;color:green;opacity:0.4;background:#ddd;z-index:999999}.tips_container:hover{opacity:0.8}.tips_container .tips_toggleWide{color:red;cursor:pointer;display:none}.tips_close{position:absolute;right:3px;top:3px}',
         NODEINSERTED_HACK:'@-moz-keyframes nodeInserted{from{opacity:0.99;}to{opacity:1;}}@-webkit-keyframes nodeInserted{from{opacity:0.99;}to{opacity:1;}}@-o-keyframes nodeInserted{from{opacity:0.99;}to{opacity:1;}}@keyframes nodeInserted{from{opacity:0.99;}to{opacity:1;}}embed,object{animation-duration:.001s;-ms-animation-duration:.001s;-moz-animation-duration:.001s;-webkit-animation-duration:.001s;-o-animation-duration:.001s;animation-name:nodeInserted;-ms-animation-name:nodeInserted;-moz-animation-name:nodeInserted;-webkit-animation-name:nodeInserted;-o-animation-name:nodeInserted;}',
         TOGGLE_BTN:'.tips_container .tips_toggleWide'
@@ -116,48 +119,27 @@
         }
     };
 
-    (function () {
-        var isStorage = true;
-        if (!Global.localStorage) {
-            isStorage = false;
-        } else {
-            try {
-                var key = String(Math.random());
-                localStorage.setItem(key, 'test');
-                if (localStorage.getItem(key) !== 'test') {
-                    throw 'not equal';
-                }
-                localStorage.removeItem(key);
-            } catch (e) {
-                isStorage = false;
-            }
+    STORE = {
+        getItem:function (key) {
+            return localStorage.getItem(key);
+        },
+        setItem:function (key, value) {
+            localStorage.setItem(key, value);
+            return value;
         }
-        STORE = {
-            getItem:function (key) {
-                if (isStorage) {
-                    return localStorage.getItem(key);
-                }
-            },
-            setItem:function (key, value) {
-                if (isStorage) {
-                    localStorage.setItem(key, value);
-                }
-                return value;
-            }
-        };
-    })();
+    };
 
 
     CONTROLLER = [
         {
-            host: '.',
-            fn: function () {
+            host:'.',
+            fn:function () {
                 var known = [];
                 onLoad(CONSTANTS.PLAYER_DOM, function (elem) {
                     var attrs = ['data', 'src'];
                     var players = CONSTANTS.PLAYERS;
                     var reloaded = false;
-                    if(known.indexOf(elem)!==-1){
+                    if (known.indexOf(elem) !== -1) {
                         return;
                     }
                     UTIL.forEach(attrs, function (attr) {
@@ -167,8 +149,8 @@
                             var value = elem[attr];
                             var movie = elem.querySelector('param[name="movie"]');
 
-                            if(movie&&movie.value){
-                                movie.value = movie.value.replace(find,replace);
+                            if (movie && movie.value) {
+                                movie.value = movie.value.replace(find, replace);
                                 reloaded = true;
                             }
                             if (value && find.test(value)) {
@@ -179,14 +161,14 @@
                                 parentNode.removeChild(elem);
                                 parentNode.insertBefore(clone, nextSibling);
                                 //Baidu tieba shit.
-                                if(clone && getComputedStyle(clone).display==='none' && clone.style){
-                                    clone.style.display='block';
+                                if (clone && getComputedStyle(clone).display === 'none' && clone.style) {
+                                    clone.style.display = 'block';
                                 }
                                 reloaded = true;
                             }
                         });
                     });
-                    if(reloaded){
+                    if (reloaded) {
                         known.push(elem);
                     }
                 });
@@ -202,7 +184,7 @@
 //                    setTHX(STORE.getItem('THX'));
 //                }
                 //默认开启宽屏
-                setTHX(STORE.setItem('THX','on'));
+                setTHX(STORE.setItem('THX', 'on'));
 
 //                var toggle = document.body.querySelector(CONSTANTS.TOGGLE_BTN);
 //                if (toggle) {
@@ -249,23 +231,26 @@
     ];
 
 
+    //init run===
+    UTIL.forEach(CONTROLLER, PROC);
+
+    //reg host and run fn
     function PROC(item) {
         if (host.indexOf(item.host) !== -1) {
             item.fn();
         }
     }
 
-
     //load player
     function onLoad(tagNameList, fn) {
         var lowerTagNameList = [];
-        UTIL.forEach(tagNameList, function(a){
+        UTIL.forEach(tagNameList, function (a) {
             lowerTagNameList.push(a.toLowerCase());
         });
 
         /* animationstart not invoked in background tabs of chrome 21 */
         var all = document.querySelectorAll(lowerTagNameList.join(','));
-        for(var i=0;i<all.length;++i){
+        for (var i = 0; i < all.length; ++i) {
             fn(all[i]);
         }
         UTIL.addCss(CONSTANTS.NODEINSERTED_HACK);
@@ -278,33 +263,30 @@
         function onAnimationStartHandler(e) {
             if (e.animationName === 'nodeInserted') {
                 var target = e.target;
-                if (target.nodeType === 1 && lowerTagNameList.indexOf(target.nodeName.toLowerCase())!==-1) {
+                if (target.nodeType === 1 && lowerTagNameList.indexOf(target.nodeName.toLowerCase()) !== -1) {
                     fn(target);
                 }
             }
         }
     }
 
-
+    //load tipers
     function tips() {
         var holder = document.body.querySelector(CONSTANTS.TIPS_HOLDER);
         if (holder) {
             var div = document.createElement('div');
             div.innerHTML = CONSTANTS.TIPS;
-//            div.querySelector('.tips_close').addEventListener('click', function (e) {
-//                if (e.preventDefault) {
-//                    e.preventDefault();
-//                }
-//                div.parentNode.removeChild(div);
-//                return false;
-//            }, false);
+            div.querySelector('.tips_close').addEventListener('click', function (e) {
+                div.parentNode.removeChild(div);
+                return false;
+            }, false);
             holder.appendChild(div);
             UTIL.addCss(CONSTANTS.STYLE);
         }
-
         console.log("noADbyOpenGG.....................");
     }
 
+    //replace share key
     function share(elem) {
         var pairs = CONSTANTS.SHARES;
         UTIL.forEach(pairs, function (item) {
@@ -312,15 +294,15 @@
         });
     }
 
-    //是否宽屏
+    //set kuanping
     function setTHX(opt) {
-        var player = document.querySelector('object#movie_player');
+        var player = document.querySelector(MOVIEPLAYER);
         var parent = document.body.querySelector('.playBox');
         var wide = document.body.querySelector('.playBox_thx');
         if (opt && player) {
             UTIL.proxy(function (Global, imports) {
-                var player = Global.document.querySelector('object#movie_player');
-                player.setTHX&&player.setTHX(imports.opt);
+                var player = Global.document.querySelector(MOVIEPLAYER);
+                player.setTHX && player.setTHX(imports.opt);
             }, {
                 opt:opt
             });
@@ -339,5 +321,4 @@
         }
     }
 
-    UTIL.forEach(CONTROLLER, PROC);
 })();
