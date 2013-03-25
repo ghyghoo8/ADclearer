@@ -9,7 +9,8 @@
 // @match          https://*/*
 // @exclude        http://www.kuaipan.cn/*
 // ==/UserScript==
-(function () {
+
+(function (unsafeWindow) {
     //Goddamn sina weibo.
     //'use strict';
     var Global = this;
