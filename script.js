@@ -10,6 +10,8 @@
 // @exclude        http://www.kuaipan.cn/*
 // ==/UserScript==
 
+//===================================================================================
+
 (function () {
     //Goddamn sina weibo.
     //'use strict';
@@ -19,7 +21,7 @@
         DONE = [],
         host = location.host;
 
-
+    //static CLASSNAME
     var MOVIEPLAYER = 'object#movie_player';
 
 
@@ -29,6 +31,8 @@
 
     var unsafeWindow = unsafeWindow;
     var unsafeGlobal = unsafeWindow; // Let's assume that...
+
+    //rules list====
     var CONSTANTS = {
         PLAYER_DOM:['object', 'embed', 'iframe'],
         PLAYERS:[
@@ -132,7 +136,7 @@
 
     CONTROLLER = [
         {
-            host:'.',
+            host:'.com',//only indexof host : .com
             fn:function () {
                 var known = [];
                 onLoad(CONSTANTS.PLAYER_DOM, function (elem) {
