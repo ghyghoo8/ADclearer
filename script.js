@@ -152,6 +152,7 @@
                 if (isStorage) {
                     localStorage.setItem(key, value);
                 }
+                return value;
             }
         };
     })();
@@ -164,18 +165,20 @@
                 var matches = document.body.querySelectorAll(CONSTANTS.SHARE_DOM);
                 UTIL.forEach(matches, share);
                 tips();
-                if (STORE.getItem('THX') === 'on') {
-                    setTHX(STORE.getItem('THX'));
-                }
+//                if (STORE.getItem('THX') === 'on') {
+//                    setTHX(STORE.getItem('THX'));
+//                }
+                //默认开启宽屏
+                setTHX(STORE.setItem('THX','on'));
 
-                var toggle = document.body.querySelector(CONSTANTS.TOGGLE_BTN);
-                if (toggle) {
-                    toggle.style.display = 'inline';
-                    toggle.addEventListener('click', function () {
-                        STORE.setItem('THX', STORE.getItem('THX') === 'on' ? 'off' : 'on');
-                        setTHX(STORE.getItem('THX'));
-                    }, false);
-                }
+//                var toggle = document.body.querySelector(CONSTANTS.TOGGLE_BTN);
+//                if (toggle) {
+//                    toggle.style.display = 'inline';
+//                    toggle.addEventListener('click', function () {
+//                        STORE.setItem('THX', STORE.getItem('THX') === 'on' ? 'off' : 'on');
+//                        setTHX(STORE.getItem('THX'));
+//                    }, false);
+//                }
             }
         },
         {
@@ -246,6 +249,7 @@
         });
     }
 
+    //是否宽屏
     function setTHX(opt) {
         var player = document.querySelector('object#movie_player');
         var parent = document.body.querySelector('.playBox');
