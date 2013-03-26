@@ -10,10 +10,10 @@
         }
     ],
     "converted_from_user_script":true,
-    "description":"noADbyOpenGG",
+    "description":"ADclearer",
     "manifest_version":2,
-    "name":"noADbyOpenGG",
-    "version":"0.11",
+    "name":"ADclearer",
+    "version":"0.12",
     "icons":{
         "128":"icon128.png",
         "64":"icon64.png",
