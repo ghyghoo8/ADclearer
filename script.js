@@ -21,9 +21,6 @@
         DONE = [],
         host = location.host;
 
-    //static CLASSNAME
-    var MOVIEPLAYER = 'object#movie_player';
-
 
     if (typeof unsafeWindow == 'undefined') {
         unsafeWindow = window;
@@ -66,11 +63,11 @@
             },
             {
                 find: /http:\/\/player\.ku6cdn\.com\/default\/common\/player\/\d*\/player\.swf/,
-                replace: 'https://haoutil.googlecode.com/svn/trunk/player/ku6.swf'
+                replace: 'http://opengg.5ihaitao.com/ku6.swf'
             },
             {
-                find: /http:\/\/www\.iqiyi\.com\/player\/\d+\/Player\.swf/,
-                replace: 'https://haoutil.googlecode.com/svn/trunk/player/iqiyi.swf'
+//                find: /http:\/\/www\.iqiyi\.com\/player\/\d+\/Player\.swf/,
+//                replace: 'https://haoutil.googlecode.com/svn/trunk/player/iqiyi.swf'
             }
         ],
         SHARE_DOM:'#panel_share input,input#copyInput.txt',
@@ -136,6 +133,9 @@
         query:function(selector,parent){
             var p=parent||document;
             return p.querySelectorAll(selector);
+        },
+        on:function(){
+
         }
     };
 
@@ -173,7 +173,7 @@
                                 movie.value = movie.value.replace(find, replace);
                                 reloaded = true;
                             }
-                            if (value && find.test(value)) {
+                            if (value &&find&& find.test(value)) {
                                 var nextSibling = elem.nextSibling;
                                 var parentNode = elem.parentNode;
                                 var clone = elem.cloneNode(true);
@@ -201,7 +201,7 @@
                 UTIL.forEach(matches, share);
                 tips();
                 //默认开启宽屏
-                setTHX(STORE.setItem('THX', 'on'));
+                //setTHX(STORE.setItem('THX', 'on'));
             }
         },
         {
@@ -212,7 +212,7 @@
                         var TUI_copyToClip = Global.TUI && Global.TUI.copyToClip;
                         if (TUI_copyToClip && TUI_copyToClip.toString().indexOf('arguments') === -1) {
                             Global.TUI.copyToClip = function () {
-                                var matches = document.body.querySelectorAll(imports.selector);
+                                var matches = UTIL.query(imports.selector);
                                 UTIL.forEach(matches, share);
                                 TUI_copyToClip.apply(Global.TUI, arguments);
                             };
@@ -229,8 +229,8 @@
                     selector:CONSTANTS.SHARE_DOM
                 });
                 tips();
-                var tudouPlayer = document.body.querySelector('#playerObject');
-                var normalDom = document.querySelector('.normal');
+                var tudouPlayer = UTIL.get('#playerObject');
+                var normalDom = UTIL.get('.normal');
                 if (tudouPlayer && normalDom) {
                     normalDom.className = normalDom.className.replace('normal', 'widescreen');
                 }
@@ -280,11 +280,12 @@
 
     //load tipers
     function tips() {
-        var holder = document.body.querySelector(CONSTANTS.TIPS_HOLDER);
+        var holder = UTIL.get(CONSTANTS.TIPS_HOLDER);
         if (holder) {
             var div = document.createElement('div');
             div.innerHTML = CONSTANTS.TIPS;
-            div.querySelector('.tips_close').addEventListener('click', function (e) {
+
+            UTIL.get('.tips_close',div).addEventListener('click', function (e) {
                 div.parentNode.removeChild(div);
                 return false;
             }, false);
@@ -303,31 +304,5 @@
         });
     }
 
-    //set kuanping
-    function setTHX(opt) {
-        var player = UTIL.get(MOVIEPLAYER);
-        var parent = UTIL.get('.playBox');
-        var wide = UTIL.get('.playBox_thx');
-        if (opt && player) {
-            UTIL.proxy(function (Global, imports) {
-                var player = Global.document.querySelector(MOVIEPLAYER);
-                player.setTHX && player.setTHX(imports.opt);
-            }, {
-                opt:opt
-            });
-            switch (opt) {
-                case 'on':
-                    if (parent && !wide) {
-                        parent.className += ' playBox_thx';
-                    }
-                    break;
-                case 'off':
-                    if (parent && wide) {
-                        parent.className = 'playBox';
-                    }
-                    break;
-            }
-        }
-    }
 
 })();

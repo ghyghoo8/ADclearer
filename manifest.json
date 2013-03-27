@@ -10,10 +10,10 @@
         }
     ],
     "converted_from_user_script":true,
-    "description":"ADclearer ÓÅ¿á ÍÁ¶¹µÈ ÊÓÆµÈ¥¹ã¸æ²å¼ş ÒÆÖ²×ÔopenGG£¬½ö¹©¸öÈËÓÃÍ¾¡£",
+    "description":"ADclearer ä¼˜é…· åœŸè±†ç­‰ è§†é¢‘å»å¹¿å‘Šæ’ä»¶ ç§»æ¤è‡ªopenGGï¼Œä»…ä¾›ä¸ªäººç”¨é€”ã€‚",
     "manifest_version":2,
     "name":"ADclearer",
-    "version":"0.12",
+    "version":"0.14",
     "icons":{
         "128":"icon128.png",
         "64":"icon64.png",
