@@ -1,6 +1,8 @@
 ADclearer
 ============
 
+**chrome插件**
+
 去除视频网站广告(优酷，土豆之类的)，介于OpenGG.Clean.Player停掉的缘故，还是弄一个自用吧。
 
 
