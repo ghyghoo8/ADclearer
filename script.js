@@ -62,8 +62,8 @@
                 replace:'http://player.opengg.me/td.php/$1'
             },
             {
-                find: /http:\/\/player\.ku6cdn\.com\/default\/common\/player\/\d*\/player\.swf/,
-                replace: 'http://opengg.5ihaitao.com/ku6.swf'
+                find:/http:\/\/player\.ku6cdn\.com\/default\/common\/player\/\d*\/player\.swf/,
+                replace:'http://opengg.5ihaitao.com/ku6.swf'
             },
             {
 //                find: /http:\/\/www\.iqiyi\.com\/player\/\d+\/Player\.swf/,
@@ -81,14 +81,19 @@
                 replace:'http://player.opengg.me/td.php/$1'
             }
         ],
-        TIPS_HOLDER:'#miniheader,#gTop',
-        TIPS:'<div class="tips_container">screening AD...<a class="tips_close">X</a></div>',
         STYLE:'.playBox_thx #player.player,.playBox_thx #player.player object{min-height:' + Math.max(Global.innerHeight * 0.6, 580) + 'px !important}.tips_container{position:absolute;top:3em;padding:1em 2em;right:50px;color:green;opacity:0.4;background:#ddd;z-index:999999}.tips_container:hover{opacity:0.8}.tips_container .tips_toggleWide{color:red;cursor:pointer;display:none}.tips_close{position:absolute;right:3px;top:3px}',
         NODEINSERTED_HACK:'@-moz-keyframes nodeInserted{from{opacity:0.99;}to{opacity:1;}}@-webkit-keyframes nodeInserted{from{opacity:0.99;}to{opacity:1;}}@-o-keyframes nodeInserted{from{opacity:0.99;}to{opacity:1;}}@keyframes nodeInserted{from{opacity:0.99;}to{opacity:1;}}embed,object{animation-duration:.001s;-ms-animation-duration:.001s;-moz-animation-duration:.001s;-webkit-animation-duration:.001s;-o-animation-duration:.001s;animation-name:nodeInserted;-ms-animation-name:nodeInserted;-moz-animation-name:nodeInserted;-webkit-animation-name:nodeInserted;-o-animation-name:nodeInserted;}',
         TOGGLE_BTN:'.tips_container .tips_toggleWide'
     };
 
     UTIL = {
+        sendMsg:function (msg, name, callback) {
+            var msgName = name || "notification";
+            //Message Passing
+            var msgPost = chrome.extension.connect({name:msgName});
+            msgPost.postMessage(msg);
+            callback && msgPost.onMessage.addListener(callback);
+        },
         addCss:function (str) {
             var style = document.createElement('style');
             style.textContent = str;
@@ -126,15 +131,15 @@
             }
             return false;
         },
-        get:function(selector,parent){
-            var p=parent||document;
+        get:function (selector, parent) {
+            var p = parent || document;
             return p.querySelector(selector);
         },
-        query:function(selector,parent){
-            var p=parent||document;
+        query:function (selector, parent) {
+            var p = parent || document;
             return p.querySelectorAll(selector);
         },
-        on:function(){
+        on:function () {
 
         }
     };
@@ -152,7 +157,7 @@
 
     CONTROLLER = [
         {
-            host:'.com',//only indexof host : .com
+            host:'.com', //only indexof host : .com
             fn:function () {
                 var known = [];
                 onLoad(CONSTANTS.PLAYER_DOM, function (elem) {
@@ -167,13 +172,13 @@
                             var find = player.find;
                             var replace = player.replace;
                             var value = elem[attr];
-                            var movie = elem.querySelector('param[name="movie"]');
+                            var movie = UTIL.get('param[name="movie"]', elem);
 
                             if (movie && movie.value) {
                                 movie.value = movie.value.replace(find, replace);
                                 reloaded = true;
                             }
-                            if (value &&find&& find.test(value)) {
+                            if (value && find && find.test(value)) {
                                 var nextSibling = elem.nextSibling;
                                 var parentNode = elem.parentNode;
                                 var clone = elem.cloneNode(true);
@@ -257,7 +262,7 @@
         });
 
         /* animationstart not invoked in background tabs of chrome 21 */
-        var all = document.querySelectorAll(lowerTagNameList.join(','));
+        var all = UTIL.query(lowerTagNameList.join(','));
         for (var i = 0; i < all.length; ++i) {
             fn(all[i]);
         }
@@ -280,12 +285,13 @@
 
     //load tipers
     function tips() {
-        var holder = UTIL.get(CONSTANTS.TIPS_HOLDER);
+        var tipers = '<div class="tips_container">screening AD...<a class="tips_close">X</a></div>';
+        var holder = UTIL.get('#miniheader,#gTop');
         if (holder) {
             var div = document.createElement('div');
-            div.innerHTML = CONSTANTS.TIPS;
+            div.innerHTML = tipers;
 
-            UTIL.get('.tips_close',div).addEventListener('click', function (e) {
+            UTIL.get('.tips_close', div).addEventListener('click', function (e) {
                 div.parentNode.removeChild(div);
                 return false;
             }, false);
@@ -293,7 +299,10 @@
             UTIL.addCss(CONSTANTS.STYLE);
         }
         console.log("ADclearer.....................");
-
+        var title=document.title,MAXLength=18;
+        UTIL.sendMsg({
+            body:(title.length>MAXLength)?(title.substring(0,MAXLength)+"..."):title
+        });
     }
 
     //replace share key
