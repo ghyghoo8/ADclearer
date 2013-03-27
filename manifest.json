@@ -10,7 +10,7 @@
         }
     ],
     "converted_from_user_script":true,
-    "description":"ADclearer",
+    "description":"ADclearer 优酷 土豆等 视频去广告插件 移植自openGG，仅供个人用途。",
     "manifest_version":2,
     "name":"ADclearer",
     "version":"0.12",
@@ -19,5 +19,13 @@
         "64":"icon64.png",
         "48":"icon48.png",
         "16":"icon32.png"
+    },
+    "permissions": [
+        "*://*/*",
+        "tabs",
+        "notifications"
+    ],
+    "background": {
+        "scripts": ["background.js"]
     }
 }

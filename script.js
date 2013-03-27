@@ -63,6 +63,14 @@
             {
                 find:/^http:\/\/www.tudou.com\/(([a-z]|programs)\/.*)/,
                 replace:'http://player.opengg.me/td.php/$1'
+            },
+            {
+                find: /http:\/\/player\.ku6cdn\.com\/default\/common\/player\/\d*\/player\.swf/,
+                replace: 'https://haoutil.googlecode.com/svn/trunk/player/ku6.swf'
+            },
+            {
+                find: /http:\/\/www\.iqiyi\.com\/player\/\d+\/Player\.swf/,
+                replace: 'https://haoutil.googlecode.com/svn/trunk/player/iqiyi.swf'
             }
         ],
         SHARE_DOM:'#panel_share input,input#copyInput.txt',
@@ -120,6 +128,14 @@
                 }
             }
             return false;
+        },
+        get:function(selector,parent){
+            var p=parent||document;
+            return p.querySelector(selector);
+        },
+        query:function(selector,parent){
+            var p=parent||document;
+            return p.querySelectorAll(selector);
         }
     };
 
@@ -181,23 +197,11 @@
         {
             host:'youku.com',
             fn:function () {
-                var matches = document.body.querySelectorAll(CONSTANTS.SHARE_DOM);
+                var matches = UTIL.query(CONSTANTS.SHARE_DOM);
                 UTIL.forEach(matches, share);
                 tips();
-//                if (STORE.getItem('THX') === 'on') {
-//                    setTHX(STORE.getItem('THX'));
-//                }
                 //默认开启宽屏
                 setTHX(STORE.setItem('THX', 'on'));
-
-//                var toggle = document.body.querySelector(CONSTANTS.TOGGLE_BTN);
-//                if (toggle) {
-//                    toggle.style.display = 'inline';
-//                    toggle.addEventListener('click', function () {
-//                        STORE.setItem('THX', STORE.getItem('THX') === 'on' ? 'off' : 'on');
-//                        setTHX(STORE.getItem('THX'));
-//                    }, false);
-//                }
             }
         },
         {
@@ -287,7 +291,8 @@
             holder.appendChild(div);
             UTIL.addCss(CONSTANTS.STYLE);
         }
-        console.log("noADbyOpenGG.....................");
+        console.log("ADclearer.....................");
+
     }
 
     //replace share key
@@ -300,9 +305,9 @@
 
     //set kuanping
     function setTHX(opt) {
-        var player = document.querySelector(MOVIEPLAYER);
-        var parent = document.body.querySelector('.playBox');
-        var wide = document.body.querySelector('.playBox_thx');
+        var player = UTIL.get(MOVIEPLAYER);
+        var parent = UTIL.get('.playBox');
+        var wide = UTIL.get('.playBox_thx');
         if (opt && player) {
             UTIL.proxy(function (Global, imports) {
                 var player = Global.document.querySelector(MOVIEPLAYER);
