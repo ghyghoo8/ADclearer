@@ -199,10 +199,10 @@
                 });
             }
         },
-    	{
-    	  host:'ku6.com',
-    	  fn:tips
-    	},
+        {
+            host:'ku6.com',
+            fn:tips
+        },
         {
             host:'youku.com',
             fn:function () {
@@ -237,7 +237,7 @@
                 }, {
                     selector:CONSTANTS.SHARE_DOM
                 });
-                
+
                 var tudouPlayer = UTIL.get('#playerObject');
                 var normalDom = UTIL.get('.normal');
                 if (tudouPlayer && normalDom) {
@@ -249,8 +249,14 @@
     ];
 
 
-    //init run===
-    UTIL.forEach(CONTROLLER, PROC);
+    if (Global.parent == Global) {
+        //init run===
+        UTIL.forEach(CONTROLLER, PROC);
+        console.log("add ADclearer plugns...");
+    } else {
+        console.log("this is an iframe page...");
+    }
+
 
     //reg host and run fn
     function PROC(item) {
@@ -304,9 +310,9 @@
             UTIL.addCss(CONSTANTS.STYLE);
         }
         console.log("ADclearer.....................");
-        var title=document.title,MAXLength=18;
+        var title = document.title, MAXLength = 18;
         UTIL.sendMsg({
-            body:(title.length>MAXLength)?(title.substring(0,MAXLength)+"..."):title
+            body:(title.length > MAXLength) ? (title.substring(0, MAXLength) + "...") : title
         });
     }
 
@@ -317,5 +323,4 @@
             elem.value = elem.value.replace(item.find, item.replace);
         });
     }
-
 })();
