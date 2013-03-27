@@ -13,7 +13,7 @@ chrome.extension.onConnect.addListener(function (port) {
 });
 
 function notification(msg) {
-    if (!msg.body)return false;
+    if (!msg.body||msg.body=="nothing here")return false;
     var note = webkitNotifications.createNotification(
         msg.icon || 'http://botaoenergy-wordpress.stor.sinaapp.com/uploads/icon48.png', // icon url - can be relative
         msg.title || 'ADclearer running...', // notification title

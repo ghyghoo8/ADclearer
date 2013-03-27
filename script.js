@@ -199,6 +199,10 @@
                 });
             }
         },
+    	{
+    	  host:'ku6.com',
+    	  fn:tips
+    	},
         {
             host:'youku.com',
             fn:function () {
@@ -233,12 +237,13 @@
                 }, {
                     selector:CONSTANTS.SHARE_DOM
                 });
-                tips();
+                
                 var tudouPlayer = UTIL.get('#playerObject');
                 var normalDom = UTIL.get('.normal');
                 if (tudouPlayer && normalDom) {
                     normalDom.className = normalDom.className.replace('normal', 'widescreen');
                 }
+                tips();
             }
         }
     ];
@@ -312,6 +317,5 @@
             elem.value = elem.value.replace(item.find, item.replace);
         });
     }
-
 
 })();
