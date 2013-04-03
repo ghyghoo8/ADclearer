@@ -39,15 +39,15 @@
             },
             {
                 find:/^http:\/\/js\.tudouui\.com\/.*?\/TudouYoukuPlayer_Homer[^.]*?\.swf/,
-                replace:'http://player.opengg.me/TudouYoukuPlayer_Homer_9.swf'
+                replace:'http://opengg.5ihaitao.com/TudouYoukuPlayer_Homer_9.swf'
             },
             {
                 find:/^http:\/\/js\.tudouui\.com\/.*?\/PortalPlayer[^.]*?\.swf/,
-                replace:'http://player.opengg.me/PortalPlayer_7.swf'
+                replace:'http://opengg.5ihaitao.com/PortalPlayer_7.swf'
             },
             {
                 find:/^http:\/\/js\.tudouui\.com\/.*?\/TudouVideoPlayer_Homer_[^.]*?.swf/,
-                replace:'http://player.opengg.me/TudouVideoPlayer_Homer_238.swf'
+                replace:'http://opengg.5ihaitao.com/TudouVideoPlayer_Homer_238.swf'
             },
             {
                 find:/^http:\/\/player\.youku\.com\/player\.php\//,
@@ -55,7 +55,7 @@
             },
             {
                 find:/^http:\/\/dp\.tudou\.com\/nplayer[^.]*?\.swf|http:\/\/js\.tudouui\.com\/doupao\/nplayer[^.]*?\.swf/,
-                replace:'http://player.opengg.me/nplayer.swf'
+                replace:'http://opengg.5ihaitao.com/nplayer.swf'
             },
             {
                 find:/^http:\/\/www.tudou.com\/(([a-z]|programs)\/.*)/,
@@ -296,7 +296,7 @@
 
     //load tipers
     function tips() {
-        var tipers = '<div class="tips_container">screening AD...<a class="tips_close">X</a></div>';
+        var tipers = '<div class="tips_container">skiped AD...<a class="tips_close">X</a></div>';
         var holder = UTIL.get('#miniheader,#gTop');
         if (holder) {
             var div = document.createElement('div');
