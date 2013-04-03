@@ -35,7 +35,7 @@
         PLAYERS:[
             {
                 find:/^http:\/\/static\.youku\.com\/.*?q?(player|loader)(_[^.]+)?\.swf/,
-                replace:'http://player.opengg.me/loader.swf'
+                replace:'http://opengg.5ihaitao.com/loader.swf'
             },
             {
                 find:/^http:\/\/js\.tudouui\.com\/.*?\/TudouYoukuPlayer_Homer[^.]*?\.swf/,
